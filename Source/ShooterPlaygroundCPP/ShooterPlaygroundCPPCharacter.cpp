@@ -105,11 +105,13 @@ void AShooterPlaygroundCPPCharacter::LookUpAtRate(float Rate)
 void AShooterPlaygroundCPPCharacter::Shoot()
 {
 	FTransform SpawnTransform = GetActorTransform();
-	SpawnTransform.TransformPosition(FVector(0.f, 0.f, 0.f));
 
+	SpawnTransform.SetRotation(FollowCamera->GetComponentRotation().Quaternion());
 	SpawnTransform.SetLocation(FollowCamera->GetComponentRotation().Vector() * 200.f + GetActorLocation());
 
 	FActorSpawnParameters SpawnParams;
+
+	UE_LOG(LogTemp, Warning, TEXT("Shooting"));
 
 	GetWorld()->SpawnActor<ABullet>(BulletBP, SpawnTransform, SpawnParams);
 }
