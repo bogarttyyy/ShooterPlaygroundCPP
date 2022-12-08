@@ -59,8 +59,8 @@ void AShooterPlaygroundCPPCharacter::SetupPlayerInputComponent(class UInputCompo
 {
 	// Set up gameplay key bindings
 	check(PlayerInputComponent);
-	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
-	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
+	/*PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
+	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);*/
 
 	PlayerInputComponent->BindAction("Shoot", IE_Pressed, this, &AShooterPlaygroundCPPCharacter::Shoot);
 
@@ -107,7 +107,7 @@ void AShooterPlaygroundCPPCharacter::Shoot()
 	FTransform SpawnTransform = GetActorTransform();
 
 	SpawnTransform.SetRotation(FollowCamera->GetComponentRotation().Quaternion());
-	SpawnTransform.SetLocation(FollowCamera->GetComponentRotation().Vector() * 200.f + GetActorLocation());
+	SpawnTransform.SetLocation(FollowCamera->GetComponentRotation().Vector() * 300.f + GetActorLocation());
 
 	FActorSpawnParameters SpawnParams;
 
