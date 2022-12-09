@@ -22,7 +22,7 @@ AShooterPlaygroundCPPCharacter::AShooterPlaygroundCPPCharacter()
 
 	// Don't rotate when the controller rotates. Let that just affect the camera.
 	bUseControllerRotationPitch = false;
-	bUseControllerRotationYaw = false;
+	bUseControllerRotationYaw = true;
 	bUseControllerRotationRoll = false;
 
 	// Configure character movement
@@ -50,6 +50,11 @@ AShooterPlaygroundCPPCharacter::AShooterPlaygroundCPPCharacter()
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
+
+#pragma region CustomMade
+	IsJumpEnabled = false;
+#pragma endregion
+
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -59,8 +64,8 @@ void AShooterPlaygroundCPPCharacter::SetupPlayerInputComponent(class UInputCompo
 {
 	// Set up gameplay key bindings
 	check(PlayerInputComponent);
-	/*PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
-	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);*/
+	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AShooterPlaygroundCPPCharacter::CharacterJump);
+	PlayerInputComponent->BindAction("Jump", IE_Released, this, &AShooterPlaygroundCPPCharacter::CharacterStopJumping);
 
 	PlayerInputComponent->BindAction("Shoot", IE_Pressed, this, &AShooterPlaygroundCPPCharacter::Shoot);
 
@@ -80,14 +85,38 @@ void AShooterPlaygroundCPPCharacter::SetupPlayerInputComponent(class UInputCompo
 	PlayerInputComponent->BindTouch(IE_Released, this, &AShooterPlaygroundCPPCharacter::TouchStopped);
 }
 
+void AShooterPlaygroundCPPCharacter::CharacterJump()
+{
+	UE_LOG(LogTemp, Warning, TEXT("JUMPED Enter"));
+
+	UE_LOG(LogTemp, Warning, TEXT("%d"), IsJumpEnabled);
+	if (IsJumpEnabled)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("JUMPED"));
+
+		Jump();
+	}
+}
+
+void AShooterPlaygroundCPPCharacter::CharacterStopJumping()
+{
+	UE_LOG(LogTemp, Warning, TEXT("%d"), IsJumpEnabled);
+	if (IsJumpEnabled)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Released!"));
+
+		StopJumping();
+	}
+}
+
 void AShooterPlaygroundCPPCharacter::TouchStarted(ETouchIndex::Type FingerIndex, FVector Location)
 {
-	Jump();
+	CharacterJump();
 }
 
 void AShooterPlaygroundCPPCharacter::TouchStopped(ETouchIndex::Type FingerIndex, FVector Location)
 {
-	StopJumping();
+	CharacterStopJumping();
 }
 
 void AShooterPlaygroundCPPCharacter::TurnAtRate(float Rate)
@@ -107,7 +136,7 @@ void AShooterPlaygroundCPPCharacter::Shoot()
 	FTransform SpawnTransform = GetActorTransform();
 
 	SpawnTransform.SetRotation(FollowCamera->GetComponentRotation().Quaternion());
-	SpawnTransform.SetLocation(FollowCamera->GetComponentRotation().Vector() * 300.f + GetActorLocation());
+	SpawnTransform.SetLocation(FollowCamera->GetComponentRotation().Vector() * 150.f + GetActorLocation());
 
 	FActorSpawnParameters SpawnParams;
 

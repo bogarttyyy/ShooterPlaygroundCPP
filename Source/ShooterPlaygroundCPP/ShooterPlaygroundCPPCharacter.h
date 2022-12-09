@@ -28,6 +28,9 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Shooting")
 	TSubclassOf<class ABullet> BulletBP;
 
+	UPROPERTY(EditAnywhere, Category = "Custom Jump Modifier")
+	bool IsJumpEnabled;
+
 protected:
 
 	void Shoot();
@@ -55,6 +58,10 @@ protected:
 
 	/** Handler for when a touch input stops. */
 	void TouchStopped(ETouchIndex::Type FingerIndex, FVector Location);
+
+	void CharacterJump();
+
+	void CharacterStopJumping();
 
 protected:
 	// APawn interface
